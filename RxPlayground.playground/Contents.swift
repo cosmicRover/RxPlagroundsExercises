@@ -18,7 +18,7 @@ import RxCocoa
  */
 
 //let scheduler = SerialDispatchQueueScheduler(qos: .default)
-//let dispose_bag = DisposeBag()
+let dispose_bag = DisposeBag()
 
 //example of subscribing and disposing
 //let subscription = Observable<Int>.interval(.milliseconds(100), scheduler: scheduler)
@@ -217,22 +217,148 @@ incrementally every 1 second. Sometimes, it is too hard to solve something with 
 //MARK: Fetch data from the internet
 
 //define a URL, compose a request and make a request using URLSession.shared.rx.json(request)
-let req = URLRequest(url: URL(string: "http://en.wikipedia.org/w/api.php?action=parse&page=Pizza&format=json")!)
-
-let response_JSON = URLSession.shared.rx.json(request: req)
-
-let get_request = response_JSON.subscribe(onNext:{ json in
-    print(json)
-})
-
-Thread.sleep(forTimeInterval: 0.5)
-get_request.dispose()
+//let req = URLRequest(url: URL(string: "http://en.wikipedia.org/w/api.php?action=parse&page=Pizza&format=json")!)
+//
+//let response_JSON = URLSession.shared.rx.json(request: req)
+//
+//let get_request = response_JSON.subscribe(onNext:{ json in
+//    print(json)
+//})
+//
+//Thread.sleep(forTimeInterval: 0.5)
+//get_request.dispose()
 
 /**Can be used to get things such as status code as well with URLSession.shared.rx*/
 
 
 //MARK: Trits, formerly known as Units
+/**
+ Single: Returns only one element or an error. Can be used in situation where you only need a val once such as performing a
+ fetch from the internet once.
+ */
 
+enum ErrorState: Error{
+    case CantParseData
+    case ErrorOnDoingWork
+    case MeaningOfLifeIsToComplex
+}
+
+//func fetchdata(_ repo: String) -> Single<[String:Any]>{
+//
+//    //returns a single http fetch request
+//    return Single<[String:Any]>.create{single in
+//        let task = URLSession.shared.dataTask(with: URL(string: "https://api.github.com/repos/\(repo)")!){
+//            data, _, error in
+//
+//            //push error value if error state encountered
+//            if let error = error{
+//                single(.error(error))
+//            }
+//
+//            //unpack data and convert them into json onjects and then assign them to results
+//            guard let data = data, let json = try? JSONSerialization.jsonObject(with: data, options: .mutableLeaves), let result = json as? [String:Any]
+//            else{ //otherwise provide an error from error state
+//                single(.error(ErrorState.CantParseData))
+//                return
+//            }
+//
+//            //return the json data on success
+//            single(.success(result))
+//        }
+//        task.resume()
+//
+//        //sever conenction when task is done
+//        return Disposables.create {
+//            task.cancel()
+//        }
+//    }
+//}
+//
+////subscribe to fetchData
+//fetchdata("ReactiveX/RxSwift").subscribe{event in
+//    switch event {
+//    case .error(let error):
+//        print(error.localizedDescription)
+//    case .success(let json):
+//        print(json)
+//    }
+//}.disposed(by: dispose_bag)
+
+//MARK: Completeables.
+/**
+ Completeables are a variation of observables that can only complete or emit an error. It can emit any elements.
+    -emits 0 elements
+    -emits a completion event or an error
+    -Doesnt share side effects
+ */
+
+//func doSomeContextualWork() -> Completable{
+//    return Completable.create{ completable in
+//        //do some work
+//        let success = true
+//        //...
+//        //..
+//        //.....
+//        guard success else{
+//            completable(.error(ErrorState.ErrorOnDoingWork))
+//            return Disposables.create {}
+//        }
+//
+//        completable(.completed)
+//        return Disposables.create {}
+//    }
+//}
+//
+//doSomeContextualWork().subscribe{completable in
+//    switch completable {
+//    case .error(let error):
+//        print(error.localizedDescription)
+//    case .completed:
+//        print("completeable is completed")
+//    }
+//}.disposed(by: dispose_bag)
+
+//MARK: Maybe
+/**
+ A maybe is right between single and observable. It can emit an element, complete without emittinng or emit an error. Any one of these three events
+ will terminate the maybe operator
+    -Emits element, completed, error
+    -Dosesnt share side effects
+ */
+
+func calculateMeaningOfLife() -> Maybe<Int>{
+    return Maybe<Int>.create{ maybe in
+        
+        //do some meaningful work
+        //...
+        //..
+        //.
+        
+        maybe(.success(42))
+        
+        maybe(.completed)
+        
+        maybe(.error(ErrorState.MeaningOfLifeIsToComplex))
+        
+        return Disposables.create {}
+    }
+}
+
+calculateMeaningOfLife().subscribe{maybe in
+    switch maybe {
+    case .success(let value):
+        print("meaning of life is \(value)")
+    case .completed:
+        print("calculation is complete")
+    case .error(let error):
+        print(error.localizedDescription)
+    }
+}.disposed(by: dispose_bag)
+
+
+//MARK: RxCocoa traits
+
+//MARK: Driver
 
 
 
