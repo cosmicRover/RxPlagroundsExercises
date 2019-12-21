@@ -11,32 +11,21 @@ import RxCocoa
 import RxSwift
 
 class ViewController: UIViewController {
+    
+    let text:UITextField = UITextField(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        view.addSubview(text)
+        text.backgroundColor = UIColor.gray
+        text.delegate = self
     }
 
-
 }
-
-//extension ObservableType {
-//    func myMap<R>(transform: @escaping (E) -> R) -> Observable<R> {
-//        return Observable.create { observer in
-//            let subscription = self.subscribe { e in
-//                    switch e {
-//                    case .next(let value):
-//                        let result = transform(value)
-//                        observer.on(.next(result))
-//                    case .error(let error):
-//                        observer.on(.error(error))
-//                    case .completed:
-//                        observer.on(.completed)
-//                    }
-//                }
-//
-//            return subscription
-//        }
-//    }
-//}
+extension ViewController: UITextFieldDelegate{
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        print(text.text!) //TODO call Rx here
+        return true
+    }
+}
 

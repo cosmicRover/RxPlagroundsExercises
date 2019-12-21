@@ -1,6 +1,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import PlaygroundSupport
 
 //MARK: Subscribing, disposing, creating Observables and 'just' operator
 /**
@@ -326,39 +327,43 @@ enum ErrorState: Error{
     -Dosesnt share side effects
  */
 
-func calculateMeaningOfLife() -> Maybe<Int>{
-    return Maybe<Int>.create{ maybe in
-        
-        //do some meaningful work
-        //...
-        //..
-        //.
-        
-        maybe(.success(42))
-        
-        maybe(.completed)
-        
-        maybe(.error(ErrorState.MeaningOfLifeIsToComplex))
-        
-        return Disposables.create {}
-    }
-}
-
-calculateMeaningOfLife().subscribe{maybe in
-    switch maybe {
-    case .success(let value):
-        print("meaning of life is \(value)")
-    case .completed:
-        print("calculation is complete")
-    case .error(let error):
-        print(error.localizedDescription)
-    }
-}.disposed(by: dispose_bag)
+//func calculateMeaningOfLife() -> Maybe<Int>{
+//    return Maybe<Int>.create{ maybe in
+//
+//        //do some meaningful work
+//        //...
+//        //..
+//        //.
+//
+//        maybe(.success(42))
+//
+//        maybe(.completed)
+//
+//        maybe(.error(ErrorState.MeaningOfLifeIsToComplex))
+//
+//        return Disposables.create {}
+//    }
+//}
+//
+//calculateMeaningOfLife().subscribe{maybe in
+//    switch maybe {
+//    case .success(let value):
+//        print("meaning of life is \(value)")
+//    case .completed:
+//        print("calculation is complete")
+//    case .error(let error):
+//        print(error.localizedDescription)
+//    }
+//}.disposed(by: dispose_bag)
 
 
 //MARK: RxCocoa traits
 
 //MARK: Driver
+/**
+ Drivers handle data flow on the UI layer. Drivers has to run on the main thread and shares side effect.
+ */
+//Driver code is in ViewController.swift
 
 
 
