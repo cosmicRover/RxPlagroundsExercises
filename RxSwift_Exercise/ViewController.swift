@@ -64,9 +64,39 @@ class ViewController: UIViewController {
             return Disposables.create()
         }
     }
-    
-    //MARK: Signal
 
 }
 
+//MARK: Signal
+
+/**A signal is similar to driver but it doesn't replay the latest event on subscription, but still shares the computational resources
+ A signal
+    - cant error out
+    - delivers on main scheduler
+    - doesnt replay elements on subscription
+    - shares computational resources
+ */
+
+//MARK: ControlProperty/ControlEvent
+
+//https://github.com/ReactiveX/RxSwift for code info on UI elements
+
+/** A control property init control value of an UI element, and any user initiated value changes afterwards. Typical use cases involve UI components such as UISearchBar
+ and UISegmentedControl.
+ 
+    - never fails
+    - share(replay: 1) behavior. Upon subscription, last item is immediately replayed
+    - its completed once deallocated
+    - delivers on main scheduler
+ 
+ A control event dictates an event that occours on an UI element. Events such as a tap, loading a new page.
+ 
+    - never fails
+    - doesnt send any initial value on subscription
+    - completes sequence once deallocated
+    - never produces an error
+    - runs on main scheduler
+ */
+
+//Be sure to check out the testing!
 
